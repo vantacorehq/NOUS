@@ -1,0 +1,18 @@
+name: "NOUS Gate"
+description: "Fail the build when code ships that no human understands."
+branding: { icon: eye, color: yellow }
+inputs:
+  min:      { description: "Minimum global comprehension %", default: "0" }
+  critical: { description: "Newline list of GLOB=PCT, e.g. src/auth/*=100", default: "" }
+  base:     { description: "Base ref; every unit changed since it must be vouched", default: "origin/main" }
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with: { python-version: "3.12" }
+    - shell: bash
+      run: |
+        pip install "${{ github.action_path }}"
+        args=(--min "${{ inputs.min }}" --since "${{ inputs.base }}")
+        while IFS= read -r c; do [ -n "$c" ] && args+=(--critical "$c"); done <<< "${{ inputs.critical }}"
+        nous gate "${args[@]}"
