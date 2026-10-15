@@ -1,0 +1,6 @@
+- id: nous-verify
+  name: nous ledger integrity
+  entry: nous verify
+  language: python
+  pass_filenames: false
+  always_run: true
