@@ -1,0 +1,15 @@
+name: nous
+on: [pull_request]
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: ./
+        with:
+          min: "60"
+          base: "origin/${{ github.base_ref }}"
+          critical: |
+            nous/ledger.py=100
+            nous/claims.py=100
